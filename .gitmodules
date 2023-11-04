@@ -1,0 +1,6 @@
+[submodule "lib/ReservedMemory-LKM-and-UserSpaceAPI"]
+	path = lib/ReservedMemory-LKM-and-UserSpaceAPI
+	url = git@github.com:DIII-SDU-Group/ReservedMemory-LKM-and-UserSpaceAPI.git
+[submodule "lib/AXI-DMA-UIO-cpp-driver"]
+	path = lib/AXI-DMA-UIO-cpp-driver
+	url = git@github.com:DIII-SDU-Group/AXI-DMA-UIO-cpp-driver.git
