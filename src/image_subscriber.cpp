@@ -3,6 +3,8 @@
 
 #include <cv_bridge/cv_bridge.h>
 
+#include "axi_dma_controller.h"
+
 class ImageSubscriber : public rclcpp::Node
 {
 	public:
@@ -22,14 +24,20 @@ class ImageSubscriber : public rclcpp::Node
 	private:
 		rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr camera_subscription_;
 
+		cv::Mat img;
+
 		void onImageMsg(const sensor_msgs::msg::Image::SharedPtr msg) {
 			RCLCPP_INFO(this->get_logger(), "Received image!");
 
 			cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg, msg->encoding);
-			cv::Mat img = cv_ptr->image;
+			img = cv_ptr->image;
 
+			//uint8_t arr[600*800*3];
+			//arr = (uint8_t*)&img;
 			RCLCPP_INFO(this->get_logger(), "Successfully loaded image");
 		}
+
+
 
 };
 
