@@ -15,7 +15,9 @@
 
 #include "lib/AXI-DMA-UIO-cpp-driver/include/axi_dma_controller.h"
 #include "lib/ReservedMemory-LKM-and-UserSpaceAPI/reserved_mem.hpp"
-#include "lib/Invert_v1_0/src/xinvert.h"
+#include "lib/Invert_v1_0/src/xinvert.c"
+#include "lib/Invert_v1_0/src/xinvert_sinit.c"
+#include "lib/Invert_v1_0/src/xinvert_linux.c"
 
 #define DEVICE_FILENAME "/dev/reservedmemLKM"
 #define LENGTH 1800000
@@ -29,6 +31,8 @@
 //#define i_U_BUFFER_PTR_H 3
 
 #define UIO_DMA_N 1
+
+#define XST_FAILURE		1L	//This is nice to have :)
 
 // clock_t t;
 std::chrono::_V2::system_clock::time_point t1;
@@ -73,6 +77,16 @@ int main()
 
 	Reserved_Mem pmem;
 	AXIDMAController dma(UIO_DMA_N, 0x10000);
+	
+	XInvert invertIP;
+	XInvert_Initialize(&invertIP, "Invert");
+	int Status;
+		if (Status != XST_SUCCESS) {
+		printf("Initialization failed %d\r\n", Status);
+		return XST_FAILURE;
+	}
+	printf("\r\n--- Invert Intialized --- \r\n");
+
 
 	uint32_t *u_buff = (uint32_t *)malloc(LENGTH);
 	if (u_buff == NULL)
