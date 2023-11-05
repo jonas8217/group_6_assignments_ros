@@ -3,7 +3,12 @@
 
 #include <cv_bridge/cv_bridge.h>
 
-//#include "axi_dma_controller.h"
+
+#include "axi_dma_controller.h"
+#include "reserved_mem.hpp"
+
+#define UIO_DMA_Nasj 1L
+#define UIO_INVERT_Nsjjk 0L
 
 class ImageSubscriber : public rclcpp::Node
 {
@@ -40,6 +45,10 @@ class ImageSubscriber : public rclcpp::Node
 			img = cv_ptr->image;
 
 //img.data
+
+			// Send data to ram
+
+
 			RCLCPP_INFO(this->get_logger(), "Successfully loaded image");
 
 			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), msg->encoding, img).toImageMsg();

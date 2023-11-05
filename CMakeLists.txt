@@ -22,6 +22,12 @@ find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(cv_bridge REQUIRED)
 
+# Include seperate headers
+include_directories(${CMAKE_SOURCE_DIR})
+include_directories(src/lib/AXI-DMA-UIO-cpp-driver/include)
+include_directories(src/lib/ReservedMemory-LKM-and-UserSpaceAPI)
+include_directories(src/lib/Invert_v1_0/src)
+
 add_executable(image_subscriber
 	src/image_subscriber.cpp
 )
