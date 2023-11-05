@@ -19,10 +19,17 @@ class ImageSubscriber : public rclcpp::Node
 					std::bind(&ImageSubscriber::onImageMsg, this, std::placeholders::_1)
 			);
 
+			image_publisher_ = this->create_publisher<sensor_msgs::msg::Image>(
+				"/image_processed",
+				10
+			);
+
 		}
 
 	private:
 		rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr camera_subscription_;
+		rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_publisher_;
+		
 
 		cv::Mat img;
 
@@ -32,8 +39,12 @@ class ImageSubscriber : public rclcpp::Node
 			cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg, msg->encoding);
 			img = cv_ptr->image;
 
-			//img.data
+//img.data
 			RCLCPP_INFO(this->get_logger(), "Successfully loaded image");
+
+			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), msg->encoding, img).toImageMsg();
+			
+			image_publisher_->publish(*processed_image_msg.get());
 		}
 
 
