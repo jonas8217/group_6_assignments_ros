@@ -3,7 +3,7 @@
 
 #include <cv_bridge/cv_bridge.h>
 
-#include "axi_dma_controller.h"
+//#include "axi_dma_controller.h"
 
 class ImageSubscriber : public rclcpp::Node
 {
@@ -32,8 +32,7 @@ class ImageSubscriber : public rclcpp::Node
 			cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg, msg->encoding);
 			img = cv_ptr->image;
 
-			//uint8_t arr[600*800*3];
-			//arr = (uint8_t*)&img;
+			//img.data
 			RCLCPP_INFO(this->get_logger(), "Successfully loaded image");
 		}
 
