@@ -13,8 +13,8 @@
 
 #include <math.h>
 
-#include "axi_dma_controller.h"
-#include "reserved_mem.hpp"
+#include "../lib/AXI-DMA-UIO-cpp-driver/include/axi_dma_controller.h"
+#include "../lib/ReservedMemory-LKM-and-UserSpaceAPI/reserved_mem.hpp"
 
 #define DEVICE_FILENAME "/dev/reservedmemLKM"
 #define LENGTH 1800000
