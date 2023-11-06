@@ -48,6 +48,8 @@ class ImageSubscriber : public rclcpp::Node
 				10
 			);
 
+            out_img.create(600,800,CV_8U);
+
             init_IPs_and_setup();
 
 		}
@@ -116,35 +118,46 @@ class ImageSubscriber : public rclcpp::Node
 			inp_img = cv_ptr->image;
             //cv::OutputArray a();
             //inp_img.convertTo(a,CV_8UC3);
-            printf("%d",inp_img.channels());
-            cv::cvtColor(inp_img,inp_img_rgb,cv::COLOR_YUV2RGB_UYVY);
 
-            printf("%d",inp_img_rgb.channels());
-            
-            return;
-            inp_buff = (uint8_t *)inp_img.data;
-			// Send data to ram
-
+            loadImage();
 
 			RCLCPP_INFO(this->get_logger(), "Successfully loaded image");
 
-			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), msg->encoding, inp_img).toImageMsg();
+            RCLCPP_INFO(this->get_logger(), "Running IP");
+
+            run_Invert_IP();
+
+            RCLCPP_INFO(this->get_logger(), "IP completed");
+
+            outputImage();
+
+			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), "mono8", out_img).toImageMsg();
 			
 			image_publisher_->publish(*processed_image_msg.get());
 		}
 
         
-        void loadImage(uint8_t *inp_buff) {
-            uint32_t *Image = (uint32_t *)inp_buff;
+        void loadImage() {
+            int i = 0;
+            cv::cvtColor(inp_img,inp_img_rgb,cv::COLOR_YUV2RGB_UYVY);
+            for (int y = 0; y < inp_img_rgb.rows; y++){
+                for (int x = 0; x < inp_img_rgb.cols; x++){
+                    for (int c = 0; c < 3; c++){
+                        inp_buff[y*inp_img_rgb.cols*3+x*3+c + (3-(i%4)*2)] = inp_img_rgb.at<cv::Vec3b>(x,y)[c];
+                        i++;
+                    }
+                }
+            }
+        }
 
-            // Image count
-            volatile int Image_Count = 0;
-
-            // Get test data
-            // while(std::getline(Test_File, Test_Data)){
-            //     Image[Image_Count] = (uint32_t)std::stoul(Test_Data);
-            //     Image_Count++;
-            // }
+        void outputImage() {
+            int i = 0;
+            for (int y = 0; y < out_img.rows; y++){
+                for (int x = 0; x < out_img.cols; x++){
+                    out_img.at<uint8_t>(x,y) = out_buff[y*out_img.cols+x + (3-(i%4)*2)];
+                    i++;
+                }
+            }
         }
 
         void run_Invert_IP(){
@@ -154,10 +167,8 @@ class ImageSubscriber : public rclcpp::Node
             dma.MM2SHalt();
             dma.S2MMHalt();
 
-            while(!XInvert_IsReady(&invertIP)) {
-                // wait
-            }
-            // Start IP
+            while(!XInvert_IsReady(&invertIP)) {}
+
             XInvert_Start(&invertIP);
             dma.MM2SStart();
             dma.S2MMStart();
