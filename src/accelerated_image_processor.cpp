@@ -116,7 +116,7 @@ class ImageSubscriber : public rclcpp::Node
 			inp_img = cv_ptr->image;
             //cv::OutputArray a();
             //inp_img.convertTo(a,CV_8UC3);
-            
+            printf("%s",inp_img.channels());
             cv::cvtColor(inp_img,inp_img_rgb,cv::COLOR_YUV2RGB_UYVY);
 
             printf("%s",inp_img_rgb.channels());
