@@ -238,7 +238,13 @@ int main()
 	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
 	print_mem(out_buff, LENGTH_OUTPUT);
 	printf("\n\n");
-	print_mem(inp_buff, LENGTH_INPUT);
+	pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
+	for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
+		if (inp_buff[i] != 0) {
+			printf("Failure in inpbuff: %i %u", i, inp_buff[i]);
+			break;
+		}
+	}
 	
 
 	// printf("Data in buffer after read\n");
