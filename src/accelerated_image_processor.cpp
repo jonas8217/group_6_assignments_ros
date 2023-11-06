@@ -113,6 +113,7 @@ class ImageSubscriber : public rclcpp::Node
         void loadImage() {
             int i = 0;
             cv::cvtColor(inp_img,inp_img_rgb,cv::COLOR_YUV2RGB_UYVY);
+            printf("out img size: %d,%d",inp_img_rgb.cols,inp_img_rgb.rows);
             for (int y = 0; y < inp_img_rgb.rows; y++){
                 for (int x = 0; x < inp_img_rgb.cols; x++){
                     for (int c = 0; c < 3; c++){
@@ -153,19 +154,19 @@ class ImageSubscriber : public rclcpp::Node
 
             while(!XInvert_IsReady(&invertIP)) {}
 
-
             XInvert_Start(&invertIP);
+
             dma.MM2SStart();
             dma.S2MMStart();
 
             dma.MM2SSetLength(LENGTH_INPUT);
             dma.S2MMSetLength(LENGTH_OUTPUT);
+            
             while (!dma.MM2SIsSynced()) {}
             while (!dma.S2MMIsSynced()) {}
             while(!XInvert_IsDone(&invertIP)) {}
-            printf("test1 ");
+
             pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
-            printf("test2\n");
         }
 
 
