@@ -78,8 +78,10 @@ int main()
 	Reserved_Mem pmem;
 	AXIDMAController dma(UIO_DMA_N, 0x10000);
 	
+	printf("\nInitalizing invert ip\n");
+
 	XInvert invertIP;
-	XInvert_Initialize(&invertIP, 0);
+	XInvert_Initialize(&invertIP, "Invert");
 	int Status;
 	if (Status != XST_SUCCESS) {
 		printf("Initialization failed %d\r\n", Status);
