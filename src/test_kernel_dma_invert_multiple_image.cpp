@@ -277,7 +277,7 @@ int main()
 		uint8_t *out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
 		pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
 		for (int i = 0; i < LENGTH_OUTPUT; i++) {
-			uint8_t expected_val = (uint8_t)(inp_buff[i*3]*R_Weight + inp_buff[(i*3) + 1]*G_Weight + inp_buff[(i*3) + 2]*B_Weight);
+			uint8_t expected_val = 255 - (uint8_t)(inp_buff[i*3]*R_Weight + inp_buff[(i*3) + 1]*G_Weight + inp_buff[(i*3) + 2]*B_Weight);
 			if (out_buff[i] != expected_val) {
 				printf("\nFailure in out_buff: %i %d != %d --addr: %x\n\r", i, out_buff[i], expected_val, &out_buff[i]);
 				FAIL = true;
