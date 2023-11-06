@@ -101,7 +101,7 @@ int main()
 	}
 	
 	for (int i = 0; i < (LENGTH_INPUT) / sizeof(uint32_t); i++)
-		inp_buff[i] = 0x14141414;
+		inp_buff[i] = 0xffffffff;
 
 	printf("User memory reserved and filled\n");
 	
@@ -241,14 +241,14 @@ int main()
 	
 	pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
 	for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
-		if (inp_buff[i] != 0x14141414) {
+		if (inp_buff[i] != 0xffffffff) {
 			printf("\nFailure in inp_buff: %i %x\n\r", i, inp_buff[i]);
 			break;
 		}
 	}
 
 	for (int i = 0; i < LENGTH_OUTPUT / sizeof(uint32_t); i++) {
-		if (out_buff[i] != 0xebebebeb) {
+		if (out_buff[i] != 0x0) {
 			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
 			break;
 		}
