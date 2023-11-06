@@ -29,10 +29,14 @@
 #define RX_OFFSET_BYTES LENGTH_INPUT
 #define RX_OFFSET_32 RX_OFFSET_BYTES/4 // This needs to be a whole number, otherwise input in ram is overwritten!
 
+Reserved_Mem pmem;
+AXIDMAController dma;
+XInvert invertIP;
+
 class ImageSubscriber : public rclcpp::Node
 {
 	public:
-		ImageSubscriber() : Node("image_subscriber"), dma(AXIDMAController(UIO_DMA_N, 0x10000)) {
+		ImageSubscriber() : Node("image_subscriber") {
 			RCLCPP_INFO(this->get_logger(), "Initializing ImageSubscriber node");
 
 			RCLCPP_INFO(this->get_logger(), "Starting camera subscription");
@@ -64,9 +68,7 @@ class ImageSubscriber : public rclcpp::Node
         cv::Mat out_img;
 
 
-        Reserved_Mem pmem;
-        AXIDMAController dma;
-        XInvert invertIP;
+
 
         uint8_t *inp_buff;
         uint8_t *out_buff;
@@ -195,6 +197,20 @@ class ImageSubscriber : public rclcpp::Node
 
 int main(int argc, char *argv[])
 {
+
+    Reserved_Mem pmem;
+    AXIDMAController dma(UIO_DMA_N, 0x10000);
+    XInvert invertIP;
+
+
+    int Status;
+    Status = XInvert_Initialize(&invertIP, "Invert");
+
+    if (Status != XST_SUCCESS) {
+        printf("Invert initialization failed %d\r\n", Status);
+        return XST_FAILURE;
+    }
+
 	setvbuf(stdout,NULL,_IONBF,BUFSIZ);
 
 	rclcpp::init(argc,argv);
