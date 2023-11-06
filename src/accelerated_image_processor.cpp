@@ -104,6 +104,8 @@ class ImageSubscriber : public rclcpp::Node
 
 			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), "8UC1", out_img).toImageMsg();
 			
+            RCLCPP_INFO(this->get_logger(), "image loaded tp msg");
+
 			image_publisher_->publish(*processed_image_msg.get());
 		}
 
