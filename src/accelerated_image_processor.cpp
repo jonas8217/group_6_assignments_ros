@@ -116,7 +116,7 @@ class ImageSubscriber : public rclcpp::Node
             //cv::OutputArray a();
             //inp_img.convertTo(a,CV_8UC3);
 
-            printf("%s",cv_ptr->encoding);
+            printf("%s",cv_ptr->encoding.c_str());
             
             return;
             inp_buff = (uint8_t *)inp_img.data;
