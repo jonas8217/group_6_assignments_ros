@@ -30,8 +30,8 @@
 
 //#define i_P_START 0
 //#define i_LENGTH 1
-//#define i_U_BUFFER_PTR_L 2
-//#define i_U_BUFFER_PTR_H 3
+//#define i_inp_buffER_PTR_L 2
+//#define i_inp_buffER_PTR_H 3
 
 #define UIO_DMA_N 1
 
@@ -93,22 +93,22 @@ int main()
 	printf("\r\n--- Invert Intialized --- \r\n");
 
 
-	uint32_t *u_buff = (uint32_t *)malloc(LENGTH);
-	if (u_buff == NULL)
+	uint32_t *inp_buff = (uint32_t *)malloc(LENGTH_INPUT);
+	if (inp_buff == NULL)
 	{
 		printf("could not allocate user buffer\n");
 		return -1;
 	}
 
 	for (int i = 0; i < (LENGTH_INPUT) / sizeof(uint32_t); i++)
-		u_buff[i] = i * 2;
+		inp_buff[i] = 0;
 
 	printf("User memory reserved and filled\n");
 	
 	tmp = 0;
 	start_timer();
 	// ret = write(reserved_mem_fd, write_info_LKM, sizeof(write_info_LKM));
-	pmem.transfer(u_buff, TX_OFFSET, LENGTH_INPUT);
+	pmem.transfer(inp_buff, TX_OFFSET, LENGTH_INPUT);
 	total_t += stop_timer();
 	std::cout << "Data transfered to reserved memory: " << total_t << "ms [" << (float)LENGTH_INPUT / 1000000. << "MB]" << std::endl;
 
@@ -183,7 +183,7 @@ int main()
 	printf("Check MM2S status.\n");
 	mm2s_status = dma.MM2SGetStatus();
 	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
-	printf("Writing S2MM transfer length of 32 bytes...\n");
+	printf("Writing S2MM transfer length of %i bytes...\n",LENGTH_OUTPUT);
 	dma.S2MMSetLength(LENGTH_OUTPUT);
 	printf("Check S2MM status.\n");
 	s2mm_status = dma.S2MMGetStatus();
@@ -233,6 +233,11 @@ int main()
 	//     ret = errno;
 	//     goto out;
 	// }
+
+	uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
+	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
+	print_mem(out_buff, LENGTH_OUTPUT);
+	
 
 	// printf("Data in buffer after read\n");
 	// for (int i = 0; i < 20; i++)
