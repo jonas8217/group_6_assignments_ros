@@ -113,8 +113,8 @@ class ImageSubscriber : public rclcpp::Node
 			cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg, msg->encoding);
 			inp_img = cv_ptr->image;
 
-            printf("%d", inp_img.data[0]);
-            exit(1);
+            printf("data at 0 in inp_img.data: %d", inp_img.data[0]);
+            return;
             inp_buff = (uint8_t *)inp_img.data;
 			// Send data to ram
 
