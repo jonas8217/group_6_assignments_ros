@@ -125,6 +125,9 @@ class ImageSubscriber : public rclcpp::Node
             int i = 0;
             for (int y = 0; y < out_img.rows; y++){
                 for (int x = 0; x < out_img.cols; x++){
+                    printf("x,y: %d,%d",x,y);
+                    printf("index: %d",y*out_img.cols+x + (3-(i%4)*2);
+                    printf("val: %d",out_buff[y*out_img.cols+x + (3-(i%4)*2)]);
                     out_img.at<uint8_t>(x,y) = out_buff[y*out_img.cols+x + (3-(i%4)*2)];
                     i++;
                 }
