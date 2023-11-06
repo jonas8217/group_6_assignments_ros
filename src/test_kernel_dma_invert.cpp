@@ -21,12 +21,12 @@
 
 #define DEVICE_FILENAME "/dev/reservedmemLKM"
 #define LENGTH 240 //(800*600*4) // Number of bytes (rgb + grayscale)
-#define LENGTH_INPUT 	ceil(LENGTH*3/4) // Number of bytes for input (3/4 because rgb)
-#define LENGTH_OUTPUT	ceil(LENGTH/4) // Number of bytes for output (1/4 because grayscale)
+#define LENGTH_INPUT 	LENGTH*3/4 // Number of bytes for input (3/4 because rgb)
+#define LENGTH_OUTPUT	LENGTH/4 // Number of bytes for output (1/4 because grayscale)
 // #define LENGTH 0x007fffff // Length in bytes
 #define P_START 0x70000000
 #define TX_OFFSET 0
-#define RX_OFFSET ceil(LENGTH_INPUT) // Should be (600×800×3)×(3÷4)÷4=270000 because it needs to be a whole number
+#define RX_OFFSET LENGTH_INPUT // Should be (600×800×3)×(3÷4)÷4=270000 because it needs to be a whole number
 
 //#define i_P_START 0
 //#define i_LENGTH 1
@@ -249,8 +249,8 @@ int main()
 	//     goto out;
 	// }
 
-	//uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
-	//pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
+	uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
+	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
 	//print_mem(out_buff, LENGTH_OUTPUT);
 	printf("\n\n");
 	
@@ -269,13 +269,13 @@ int main()
 			//break;
 		//}
 	//}
-
-	//for (int i = 0; i < LENGTH_OUTPUT / sizeof(uint32_t); i++) {
-		//if (out_buff[i] != outputVal) {
-	//		printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
-			//break;
-		//}
-	//}
+	uint8_t *out_buff8 = (uint8_t *) out_buff;
+	for (int i = 0; i < LENGTH_OUTPUT; i++) {
+		if (out_buff8[i] != (uint8_t) (outputVal & 0xFF)) {
+			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff8[i]);
+			break;
+		}
+	}
 	
 
 	// printf("Data in buffer after read\n");
