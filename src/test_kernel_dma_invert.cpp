@@ -226,6 +226,13 @@ int main()
 	s2mm_status = dma.S2MMGetStatus();
 	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
 
+	// Wait for ip to finish
+	printf("Wait for ip to finish");
+	while(!XInvert_IsDone(&invertIP)) {
+		// Wait
+	}
+	printf("Ip done!");
+
 	// write_info_LKM[i_P_START] = 0; //! CHECK update read
 	// write_info_LKM[i_LENGTH] = 100;
 	// write_info_LKM[i_K_START] = 10;
