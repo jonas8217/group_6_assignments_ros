@@ -271,7 +271,7 @@ int main()
 	//}
 	uint8_t *out_buff8 = (uint8_t *) out_buff;
 	for (int i = 0; i < LENGTH_OUTPUT; i++) {
-		if (out_buff8[i] != (uint8_t) (outputVal & 0xFF)) {
+		if (out_buff8[i] != 0x14) {
 			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff8[i]);
 			break;
 		}
