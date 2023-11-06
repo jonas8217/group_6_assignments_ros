@@ -102,7 +102,7 @@ class ImageSubscriber : public rclcpp::Node
 
             RCLCPP_INFO(this->get_logger(), "Loaded image from dram");
 
-			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), "mono8", out_img).toImageMsg();
+			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), "8UC1", out_img).toImageMsg();
 			
 			image_publisher_->publish(*processed_image_msg.get());
 		}
