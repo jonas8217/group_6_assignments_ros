@@ -26,7 +26,7 @@
 // #define LENGTH 0x007fffff // Length in bytes
 #define P_START 0x70000000
 #define TX_OFFSET 0
-#define RX_OFFSET LENGTH_INPUT
+#define RX_OFFSET LENGTH_INPUT // Should be (600×800×3)×(3÷4)÷4=270000 because it needs to be a whole number
 
 //#define i_P_START 0
 //#define i_LENGTH 1
