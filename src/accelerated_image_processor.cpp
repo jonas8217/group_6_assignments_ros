@@ -130,7 +130,7 @@ class ImageSubscriber : public rclcpp::Node
             int rows = out_img.rows;
             for (int y = 0; y < rows; y++){
                 for (int x = 0; x < cols; x++){
-                    out_img.at<uint8_t>(y,x) = out_buff[y*cols+x+ (3-(i%4)*2)];
+                    out_img.at<uint8_t>(y,x) = out_buff[y*cols+x]; // + (3-(i%4)*2)
                     i++;
                 }
             }
