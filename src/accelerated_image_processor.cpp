@@ -111,6 +111,8 @@ class ImageSubscriber : public rclcpp::Node
 
             outputImage();
 
+            RCLCPP_INFO(this->get_logger(), "Loaded image from dram");
+
 			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), "mono8", out_img).toImageMsg();
 			
 			image_publisher_->publish(*processed_image_msg.get());
@@ -178,7 +180,7 @@ class ImageSubscriber : public rclcpp::Node
             while(!XInvert_IsDone(&invertIP)) {}
             printf("test9");
             pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
-            printf("test10");
+            printf("test10\n");
         }
 
 
@@ -195,7 +197,7 @@ int main(int argc, char *argv[])
         printf("Invert initialization failed %d\r\n", Status);
         return XST_FAILURE;
     }
-    
+
 	setvbuf(stdout,NULL,_IONBF,BUFSIZ);
 
 	rclcpp::init(argc,argv);
