@@ -249,8 +249,7 @@ int main()
 	//     goto out;
 	// }
 
-	uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
-	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
+	
 	//print_mem(out_buff, LENGTH_OUTPUT);
 	printf("\n\n");
 	
@@ -269,10 +268,11 @@ int main()
 			//break;
 		//}
 	//}
-	uint8_t *out_buff8 = (uint8_t *) out_buff;
+	uint8_t *out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
+	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
 	for (int i = 0; i < LENGTH_OUTPUT; i++) {
-		if (out_buff8[i] != 0x14) {
-			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff8[i]);
+		if (out_buff[i] != 0x14) {
+			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
 			break;
 		}
 	}
