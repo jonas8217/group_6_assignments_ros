@@ -269,13 +269,13 @@ int main()
 		
 		uint32_t *consist_buff = (uint32_t *)malloc(LENGTH_INPUT);
 		pmem.gather(consist_buff, TX_OFFSET, LENGTH_INPUT);
-		for (int i = 0; i < LENGTH_INPUT; i++) {
+		for (int i = 0; i < LENGTH_INPUT/4; i++) {
 			if (consist_buff[i] != inp_buff[i]) {
 				printf("\nFailure in out_buff: %i (curr: %d) = (old: %d) --addr: %x\n\r", i, consist_buff[i], inp_buff[i], &consist_buff[i]);
 				FAIL = true;
 				break;
 			}
-			if (i == LENGTH_INPUT-1) {
+			if (i == LENGTH_INPUT/4-1) {
 				printf("\n Input has correct value!\n");
 			}
 		}
