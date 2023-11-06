@@ -22,11 +22,11 @@
 #define DEVICE_FILENAME "/dev/reservedmemLKM"
 #define LENGTH (800*600*4)
 #define LENGTH_INPUT 	(LENGTH*3/4)
-#define LENGTH_OUTPUT	LENGTH - LENGTH_INPUT
+#define LENGTH_OUTPUT	(LENGTH/4)
 // #define LENGTH 0x007fffff // Length in bytes
 #define P_START 0x70000000
 #define TX_OFFSET 0
-#define RX_OFFSET LENGTH_INPUT/4
+#define RX_OFFSET LENGTH_INPUT
 
 //#define i_P_START 0
 //#define i_LENGTH 1
