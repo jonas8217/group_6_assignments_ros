@@ -2,6 +2,7 @@
 #include <sensor_msgs/msg/image.hpp>
 
 #include <cv_bridge/cv_bridge.h>
+#include <opencv4/opencv2/imgcodecs.hpp>
 
 
 #include "lib/AXI-DMA-UIO-cpp-driver/include/axi_dma_controller.h"
@@ -112,9 +113,11 @@ class ImageSubscriber : public rclcpp::Node
 
 			cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg, msg->encoding);
 			inp_img = cv_ptr->image;
+            //cv::OutputArray a();
+            //inp_img.convertTo(a,CV_8UC3);
 
-            printf("data at 0 in inp_img.data: %d\n", inp_img.data[0]);
-            printf("sizeof inp_img.data: %d and pointer: %d\n", sizeof(inp_img.data), sizeof(*inp_img.data));
+            printf("%s",cv_ptr->encoding);
+            
             return;
             inp_buff = (uint8_t *)inp_img.data;
 			// Send data to ram
