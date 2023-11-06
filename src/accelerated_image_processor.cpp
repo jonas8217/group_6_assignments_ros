@@ -85,8 +85,8 @@ class ImageSubscriber : public rclcpp::Node
 
 			cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg, msg->encoding);
 			inp_img = cv_ptr->image;
-            //cv::OutputArray a();
-            //inp_img.convertTo(a,CV_8UC3);
+
+            RCLCPP_INFO(this->get_logger(), "Loading image to dram");
 
             loadImage();
 
@@ -116,7 +116,7 @@ class ImageSubscriber : public rclcpp::Node
             for (int y = 0; y < inp_img_rgb.rows; y++){
                 for (int x = 0; x < inp_img_rgb.cols; x++){
                     for (int c = 0; c < 3; c++){
-                        inp_buff[y*inp_img_rgb.cols*3+x*3+c + (3-(i%4)*2)] = inp_img_rgb.at<cv::Vec3b>(x,y)[c];
+                        inp_buff[y*inp_img_rgb.cols*3+x*3+c + (3-(i%4)*2)] = inp_img_rgb.at<cv::Vec3b>(y,x)[c];
                         i++;
                     }
                 }
