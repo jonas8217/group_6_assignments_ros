@@ -37,6 +37,9 @@
 
 #define XST_FAILURE		1L	//This is nice to have :)
 
+#define inputVal		0xebebebeb
+#define outputVal		0x14141414
+
 // clock_t t;
 std::chrono::_V2::system_clock::time_point t1;
 void start_timer()
@@ -101,7 +104,7 @@ int main()
 	}
 	
 	for (int i = 0; i < (LENGTH_INPUT) / sizeof(uint32_t); i++)
-		inp_buff[i] = 0xebebebeb;
+		inp_buff[i] = inputVal;
 
 	printf("User memory reserved and filled\n");
 	
@@ -235,20 +238,20 @@ int main()
 	// }
 
 	uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
-	pmem.gather(out_buff, RX_OFFSET*4, LENGTH_OUTPUT);
+	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
 	//print_mem(out_buff, LENGTH_OUTPUT);
 	printf("\n\n");
 	
 	pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
 	for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
-		if (inp_buff[i] != 0xebebebeb) {
+		if (inp_buff[i] != inputVal) {
 			printf("\nFailure in inp_buff: %i %x\n\r", i, inp_buff[i]);
 			break;
 		}
 	}
 
 	for (int i = 0; i < LENGTH_OUTPUT / sizeof(uint32_t); i++) {
-		if (out_buff[i] != 0x14141414) {
+		if (out_buff[i] != outputVal) {
 			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
 			break;
 		}
