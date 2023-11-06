@@ -241,7 +241,7 @@ int main()
 	pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
 	for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
 		if (inp_buff[i] != 0) {
-			printf("Failure in inpbuff: %i %u", i, inp_buff[i]);
+			printf("\nFailure in inpbuff: %i %u\n\r", i, inp_buff[i]);
 			break;
 		}
 	}
@@ -252,8 +252,8 @@ int main()
 	// {
 	//     printf("%i ", p[i]);
 	// }
-	printf("ALL DONE!\n");
+	printf("\nALL DONE!\n");
 
-	std::cout << "Total duration of transfer: " << total_t << "ms [" << (float)LENGTH_INPUT / 1000000. << "MB]" << std::endl;
+	std::cout << "\nTotal duration of transfer: " << total_t << "ms [" << (float)LENGTH_INPUT / 1000000. << "MB]" << std::endl;
 	return ret;
 }
