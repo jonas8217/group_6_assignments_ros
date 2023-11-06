@@ -90,10 +90,8 @@ void loadImage(uint8_t *inp_buff) {
 	volatile int Image_Count = 0;
 
 	// Get test data
-	uint32_t temp32Val;
 	while(std::getline(Test_File, Test_Data)){
-		temp32Val = (uint32_t)std::stoul(Test_Data);
-		Image[Image_Count] = ((temp32Val & 0xff) << (3*8)) || ((temp32Val & (0xff << 8)) << 8) || ((temp32Val & (0xff << 16)) >> 8) || ((temp32Val & (0xff << 24)) >> 24); // Reverse bytes in 32 bit value
+		Image[Image_Count] = (uint32_t)std::stoul(Test_Data);
 		Image_Count++;
 	}
 	Test_File.close();
@@ -274,12 +272,17 @@ int main()
 				printf("\n Input has correct value!\n");
 			}
 		}
-		
 
+		for (int i = 0; i < LENGTH_INPUT/4; i++)
+		{
+			uint32_t temp32Val = ((uint32_t *)inp_buff)[i];
+			((uint32_t *)in_buff)[i] = ((temp32Val & 0xff) << 24) || ((temp32Val & (0xff << 8)) << 8) || ((temp32Val & (0xff << 16)) >> 8) || ((temp32Val & (0xff << 24)) >> 24);
+		}
+		
 		uint8_t *out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
 		pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
 		for (int i = 0; i < LENGTH_OUTPUT; i++) {
-			uint8_t expected_val = 255 - (uint8_t)(inp_buff[i*3]*R_Weight + inp_buff[(i*3) + 1]*G_Weight + inp_buff[(i*3) + 2]*B_Weight);
+			uint8_t expected_val = 255 - (uint8_t)(in_buff[i*3]*R_Weight + in_buff[(i*3) + 1]*G_Weight + in_buff[(i*3) + 2]*B_Weight);
 			if (out_buff[i] != expected_val) {
 				printf("\nFailure in out_buff: %i %d != %d --addr: %x\n\r", i, out_buff[i], expected_val, &out_buff[i]);
 				FAIL = true;
