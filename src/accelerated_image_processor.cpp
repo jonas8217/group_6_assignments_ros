@@ -48,7 +48,7 @@ class ImageSubscriber : public rclcpp::Node
 				10
 			);
 
-            //init_IPs_and_setup();
+            init_IPs_and_setup();
 
 		}
 
