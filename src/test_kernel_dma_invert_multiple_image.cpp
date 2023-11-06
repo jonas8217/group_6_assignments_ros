@@ -278,9 +278,16 @@ int main()
 			uint32_t temp32Val = ((uint32_t *)inp_buff)[i];
 			((uint32_t *)in_buff)[i] = ((temp32Val & 0xff) << 24) || ((temp32Val & (0xff << 8)) << 8) || ((temp32Val & (0xff << 16)) >> 8) || ((temp32Val & (0xff << 24)) >> 24);
 		}
-		
+
 		uint8_t *out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
 		pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
+		
+		for (int i = 0; i < LENGTH_OUTPUT/4; i++)
+		{
+			uint32_t temp32Val = ((uint32_t *)out_buff)[i];
+			((uint32_t *)out_buff)[i] = ((temp32Val & 0xff) << 24) || ((temp32Val & (0xff << 8)) << 8) || ((temp32Val & (0xff << 16)) >> 8) || ((temp32Val & (0xff << 24)) >> 24);
+		}
+		
 		for (int i = 0; i < LENGTH_OUTPUT; i++) {
 			uint8_t expected_val = 255 - (uint8_t)(in_buff[i*3]*R_Weight + in_buff[(i*3) + 1]*G_Weight + in_buff[(i*3) + 2]*B_Weight);
 			if (out_buff[i] != expected_val) {
