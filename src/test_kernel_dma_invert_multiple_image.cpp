@@ -14,6 +14,7 @@
 
 #include <math.h>
 
+
 #include "lib/AXI-DMA-UIO-cpp-driver/include/axi_dma_controller.h"
 #include "lib/ReservedMemory-LKM-and-UserSpaceAPI/reserved_mem.hpp"
 #include "lib/Invert_v1_0/src/xinvert.c"
@@ -39,7 +40,7 @@
 
 #define inputVal		0xeb
 #define outputVal		0x14
-#define TRIES_N			10
+#define TRIES_N			1
 
 #define R_Weight 0.299 //R constant
 #define G_Weight 0.587 //G constant
@@ -329,9 +330,12 @@ int main()
 	{
 		printf("\nSuccess, all tries (%i) worked!\n", TRIES_N);
 		// Write to file
-		std::ofstream Result_File("Results.txt");
+		std::ofstream Result_File;
+		Result_File.open("Result_File.txt");
+		char * temp = "";
 		for(int i = 0; i < LENGTH_OUTPUT; i++){
-			Result_File << finalResultBuff[i] << "\n";
+			sprintf(temp,"%d",finalResultBuff[i]);
+			Result_File << temp << "\n";
 		}
 		Result_File.close();
 		printf("\nSaved result to file!\n", TRIES_N);
