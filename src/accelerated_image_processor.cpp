@@ -161,26 +161,27 @@ class ImageSubscriber : public rclcpp::Node
         }
 
         void run_Invert_IP(){
-
+            printf("test1");
             pmem.transfer(inp_buff, TX_OFFSET, LENGTH_INPUT);
-
+            printf("test2");
             dma.MM2SHalt();
             dma.S2MMHalt();
-
+            printf("test3");
             while(!XInvert_IsReady(&invertIP)) {}
-
+            printf("test4");
             XInvert_Start(&invertIP);
+            printf("test5");
             dma.MM2SStart();
             dma.S2MMStart();
-
+            printf("test6");
             while (!dma.MM2SIsSynced()) {}
-
+            printf("test7");
             while (!dma.S2MMIsSynced()) {}
-            
+            printf("test8");
             while(!XInvert_IsDone(&invertIP)) {}
-
+            printf("test9");
             pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
-
+            printf("test10");
         }
 
 
