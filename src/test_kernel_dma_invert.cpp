@@ -236,10 +236,10 @@ int main()
 
 	uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
 	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
-	print_mem(out_buff, LENGTH_OUTPUT);
+	//print_mem(out_buff, LENGTH_OUTPUT);
 	printf("\n\n");
-	pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
-	for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
+	//pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
+	for (int i = 0; i < LENGTH_OUTPUT / sizeof(uint32_t); i++) {
 		if (out_buff[i] != 0xffffffff) {
 			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
 			break;
