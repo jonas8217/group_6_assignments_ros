@@ -5,7 +5,6 @@
 #include <string.h>
 #include <errno.h>
 #include <stdint.h>
-// #include <stdlib.h>
 #include <iostream>
 
 #include <time.h>
@@ -26,13 +25,9 @@
 // #define LENGTH 0x007fffff // Length in bytes
 #define P_START 0x70000000
 #define TX_OFFSET 0
-#define RX_OFFSET_BYTES LENGTH_INPUT // Should be (600×800×3)×(3÷4)÷4=270000 because it needs to be a whole number
+#define RX_OFFSET_BYTES LENGTH_INPUT
 #define RX_OFFSET_32 RX_OFFSET_BYTES/4 // This needs to be a whole number, otherwise input in ram is overwritten!
 
-//#define i_P_START 0
-//#define i_LENGTH 1
-//#define i_inp_buffER_PTR_L 2
-//#define i_inp_buffER_PTR_H 3
 
 #define UIO_DMA_N 1
 
@@ -111,7 +106,6 @@ int main()
 	
 	tmp = 0;
 	start_timer();
-	// ret = write(reserved_mem_fd, write_info_LKM, sizeof(write_info_LKM));
 	pmem.transfer(inp_buff, TX_OFFSET, LENGTH_INPUT);
 	total_t += stop_timer();
 	std::cout << "Data transfered to reserved memory: " << total_t << "ms [" << (float)LENGTH_INPUT / 1000000. << "MB]" << std::endl;
@@ -206,14 +200,9 @@ int main()
 	start_timer();
 	printf("...Waiting for MM2S synchronization...\n");
 
-	// bool first = true;
 	while (!dma.MM2SIsSynced())
 	{
-		// if (first)
-		// {
-		// 	printf("Not synced yet...\n");
-		// 	first = false;
-		// }
+
 	}
 
 	tmp = stop_timer();
@@ -239,22 +228,9 @@ int main()
 	}
 	printf("\nIp done!\n");
 
-	// write_info_LKM[i_P_START] = 0; //! CHECK update read
-	// write_info_LKM[i_LENGTH] = 100;
-	// write_info_LKM[i_K_START] = 10;
-	// ret = read(reserved_mem_fd, write_info_LKM, sizeof(write_info_LKM));
-	// if (ret < 0)
-	// {
-	//     printf("read error!\n");
-	//     ret = errno;
-	//     goto out;
-	// }
-
 	
-	//print_mem(out_buff, LENGTH_OUTPUT);
 	printf("\n\n");
 	
-	//pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
 	uint32_t *io_buff = (uint32_t *)malloc(LENGTH*2);
 	
 	pmem.gather(io_buff, TX_OFFSET, LENGTH*2);
@@ -271,7 +247,7 @@ int main()
 			break;
 		}
 		if (i == LENGTH_INPUT-1) {
-			printf("\n Output has correct value!\n");
+			printf("\n Input has correct value!\n");
 		}
 	}
 
@@ -286,13 +262,6 @@ int main()
 			printf("\n Output has correct value!\n");
 		}
 	}
-	
-
-	// printf("Data in buffer after read\n");
-	// for (int i = 0; i < 20; i++)
-	// {
-	//     printf("%i ", p[i]);
-	// }
 	printf("\nALL DONE!\n");
 
 	std::cout << "\nTotal duration of transfer: " << total_t << "ms [" << (float)LENGTH_INPUT / 1000000. << "MB]" << std::endl;
