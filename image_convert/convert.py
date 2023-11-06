@@ -59,7 +59,7 @@ def to_image_32bit(pixel_array,size,format="RGB"):
 
     return image
 
-img = Image.open("/home/jonas/embedded/group_6_assignments_ros/images/test_image.jpg")
+img = Image.open("/home/jonas/embedded/group_6_assignments_ros/image_convert/test_image.jpg")
 img = img.convert("RGB")
 width,height = img.size
 img = img.resize((width,height))
@@ -90,4 +90,4 @@ if True:
         pixel_array = f.read().split('\n')
     img = to_image_32bit(pixel_array,size,'L') # L == grayscale
     img.show()
-    img.save("test_image_grayscale_inverted.jpg")
+    #img.save("test_image_grayscale_inverted.jpg")
