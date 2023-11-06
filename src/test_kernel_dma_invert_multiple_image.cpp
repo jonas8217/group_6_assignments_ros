@@ -123,6 +123,7 @@ int main()
 	printf("\r\n--- Invert Intialized --- \r\n");
 
 	bool FAIL = false;
+	uint8_t finalResultBuff[IMAGE_WIDTH*IMAGE_HEIGHT];
 
 	for (int try_n = 0; try_n < TRIES_N; try_n++)
 	{
@@ -315,12 +316,25 @@ int main()
 			break;
 		}
 		
-
+		if (FAIL == false && try_n == (TRIES_N - 1)) {
+			for (int i = 0; i < LENGTH_OUTPUT; i++)
+			{
+				finalResultBuff[i] = gray_scale[i];
+			}
+			
+		}
 	}
 
 	if (FAIL == false)
 	{
 		printf("\nSuccess, all tries (%i) worked!\n", TRIES_N);
+		// Write to file
+		std::ofstream Result_File("Results.txt");
+		for(int i = 0; i < LENGTH_OUTPUT; i++){
+			Result_File << finalResultBuff[i] << "\n";
+		}
+		Result_File.close();
+		printf("\nSaved result to file!\n", TRIES_N);
 	}
 	
 
