@@ -33,6 +33,9 @@ Reserved_Mem pmem;
 AXIDMAController dma(UIO_DMA_N, 0x10000);
 XInvert invertIP;
 
+uint8_t *inp_buff;
+uint8_t *out_buff;
+
 class ImageSubscriber : public rclcpp::Node
 {
 	public:
@@ -67,26 +70,12 @@ class ImageSubscriber : public rclcpp::Node
         cv::Mat inp_img_rgb;
         cv::Mat out_img;
 
-        uint8_t *inp_buff;
-        uint8_t *out_buff;
+
 
         int init_IPs_and_setup(){
             
 
             printf("\r\n--- IPs Intialized --- \r\n");
-
-            inp_buff = (uint8_t *)malloc(LENGTH_INPUT);
-            if (inp_buff == NULL)
-            {
-                printf("could not allocate user buffer\n");
-                return -1;
-            }
-            out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
-            if (out_buff == NULL)
-            {
-                printf("could not allocate user buffer\n");
-                return -1;
-            }
 
         }
 
@@ -145,26 +134,21 @@ class ImageSubscriber : public rclcpp::Node
         void run_Invert_IP(){
             
             pmem.transfer(inp_buff, TX_OFFSET, LENGTH_INPUT);
-            printf("test1");
 
             dma.MM2SReset();
             dma.S2MMReset();
 
-            printf("test2");
             dma.MM2SHalt();
             dma.S2MMHalt();
 
             dma.MM2SInterruptEnable();
     		dma.S2MMInterruptEnable();
 
-            printf("test3");
             dma.MM2SSetSourceAddress(P_START + TX_OFFSET);
             dma.S2MMSetDestinationAddress(P_START + RX_OFFSET_BYTES);
 
-            printf("test4");
             while(!XInvert_IsReady(&invertIP)) {}
 
-            printf("test5");
 
             XInvert_Start(&invertIP);
             dma.MM2SStart();
@@ -172,15 +156,12 @@ class ImageSubscriber : public rclcpp::Node
 
             dma.MM2SSetLength(LENGTH_INPUT);
             dma.S2MMSetLength(LENGTH_OUTPUT);
-            printf("test6");
             while (!dma.MM2SIsSynced()) {}
-            printf("test7");
             while (!dma.S2MMIsSynced()) {}
-            printf("test8");
             while(!XInvert_IsDone(&invertIP)) {}
-            printf("test9");
+            printf("test1 ");
             pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
-            printf("test10\n");
+            printf("test2\n");
         }
 
 
@@ -189,6 +170,19 @@ class ImageSubscriber : public rclcpp::Node
 
 int main(int argc, char *argv[])
 {
+
+    inp_buff = (uint8_t *)malloc(LENGTH_INPUT);
+    if (inp_buff == NULL)
+    {
+        printf("could not allocate user buffer\n");
+        return -1;
+    }
+    out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
+    if (out_buff == NULL)
+    {
+        printf("could not allocate user buffer\n");
+        return -1;
+    }
 
     int Status;
     Status = XInvert_Initialize(&invertIP, "Invert");
