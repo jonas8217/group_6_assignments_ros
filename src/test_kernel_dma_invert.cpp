@@ -99,9 +99,9 @@ int main()
 		printf("could not allocate user buffer\n");
 		return -1;
 	}
-
+	
 	for (int i = 0; i < (LENGTH_INPUT) / sizeof(uint32_t); i++)
-		inp_buff[i] = 20;
+		inp_buff[i] = 0x14141414;
 
 	printf("User memory reserved and filled\n");
 	
