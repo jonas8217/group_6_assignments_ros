@@ -48,7 +48,7 @@ class ImageSubscriber : public rclcpp::Node
 				10
 			);
 
-            init_IPs_and_setup();
+            //init_IPs_and_setup();
 
 		}
 
@@ -58,6 +58,7 @@ class ImageSubscriber : public rclcpp::Node
 		
 
 		cv::Mat inp_img;
+        cv::Mat inp_img_rgb;
         cv::Mat out_img;
 
 
@@ -115,8 +116,10 @@ class ImageSubscriber : public rclcpp::Node
 			inp_img = cv_ptr->image;
             //cv::OutputArray a();
             //inp_img.convertTo(a,CV_8UC3);
+            
+            cv::cvtColor(inp_img,inp_img_rgb,cv::COLOR_YUV2RGB_UYVY);
 
-            printf("%s",cv_ptr->encoding.c_str());
+            printf("%s",inp_img_rgb.channels());
             
             return;
             inp_buff = (uint8_t *)inp_img.data;
