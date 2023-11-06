@@ -156,7 +156,7 @@ int main()
 	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
 
 	printf("Writing the destination address for the data from S2MM in DDR...\n");
-	dma.S2MMSetDestinationAddress(P_START + RX_OFFSET/4);
+	dma.S2MMSetDestinationAddress(P_START + RX_OFFSET);
 	printf("Check S2MM status.\n");
 	s2mm_status = dma.S2MMGetStatus();
 	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
@@ -235,7 +235,7 @@ int main()
 	// }
 
 	uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
-	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
+	pmem.gather(out_buff, RX_OFFSET*4, LENGTH_OUTPUT);
 	//print_mem(out_buff, LENGTH_OUTPUT);
 	printf("\n\n");
 	
