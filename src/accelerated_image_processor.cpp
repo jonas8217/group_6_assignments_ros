@@ -114,6 +114,7 @@ class ImageSubscriber : public rclcpp::Node
 			inp_img = cv_ptr->image;
 
             printf("data at 0 in inp_img.data: %d", inp_img.data[0]);
+            printf("sizeof inp_img.data: %d", sizeof(inp_img.data));
             return;
             inp_buff = (uint8_t *)inp_img.data;
 			// Send data to ram
