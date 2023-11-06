@@ -112,7 +112,7 @@ class ImageSubscriber : public rclcpp::Node
         
         void loadImage() {
             int i = 0;
-            cv::cvtColor(inp_img,inp_img_rgb,cv::COLOR_YUV2RGB);
+            cv::cvtColor(inp_img,inp_img_rgb,cv::COLOR_YUV2RGB_YUY2);
             //printf("inp img size: %d,%d",inp_img_rgb.cols,inp_img_rgb.rows);
             int cols = inp_img_rgb.cols;
             int rows = inp_img_rgb.rows;
