@@ -20,7 +20,7 @@
 #include "lib/Invert_v1_0/src/xinvert_linux.c"
 
 #define DEVICE_FILENAME "/dev/reservedmemLKM"
-#define LENGTH 120 //(800*600*4)
+#define LENGTH 240 //(800*600*4)
 #define LENGTH_INPUT 	(LENGTH*3/4)
 #define LENGTH_OUTPUT	(LENGTH/4)
 // #define LENGTH 0x007fffff // Length in bytes
