@@ -67,17 +67,10 @@ class ImageSubscriber : public rclcpp::Node
         cv::Mat inp_img_rgb;
         cv::Mat out_img;
 
-
-
-
         uint8_t *inp_buff;
         uint8_t *out_buff;
 
         int init_IPs_and_setup(){
-
-            printf("\nInitalizing IPs\n");
-            int Status;
-            Status = XInvert_Initialize(&invertIP, "Invert");
             
             if (Status != XST_SUCCESS) {
                 printf("Invert initialization failed %d\r\n", Status);
@@ -197,9 +190,6 @@ class ImageSubscriber : public rclcpp::Node
 
 int main(int argc, char *argv[])
 {
-
-
-
 
     int Status;
     Status = XInvert_Initialize(&invertIP, "Invert");

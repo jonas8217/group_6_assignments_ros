@@ -31,17 +31,17 @@ include_directories(src/lib/Invert_v1_0/src)
 add_executable(accelerated_image_processor
   src/accelerated_image_processor.cpp
 )
-add_executable(image_subscriber
-  src/image_subscriber.cpp
-)
+#add_executable(image_subscriber
+#  src/image_subscriber.cpp
+#)
 
 
-ament_target_dependencies(image_subscriber
-	rclcpp
-	sensor_msgs
-	OpenCV
-	cv_bridge
-)
+#ament_target_dependencies(image_subscriber
+#	rclcpp
+#	sensor_msgs
+#	OpenCV
+#	cv_bridge
+#)
 
 ament_target_dependencies(accelerated_image_processor
 	rclcpp
@@ -50,7 +50,7 @@ ament_target_dependencies(accelerated_image_processor
 	cv_bridge
 )
 
-install(TARGETS image_subscriber DESTINATION lib/${PROJECT_NAME})
+#install(TARGETS image_subscriber DESTINATION lib/${PROJECT_NAME})
 
 install(TARGETS accelerated_image_processor DESTINATION lib/${PROJECT_NAME})
 
