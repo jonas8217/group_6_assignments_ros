@@ -26,7 +26,8 @@
 // #define LENGTH 0x007fffff // Length in bytes
 #define P_START 0x70000000
 #define TX_OFFSET 0
-#define RX_OFFSET LENGTH_INPUT // Should be (600×800×3)×(3÷4)÷4=270000 because it needs to be a whole number
+#define RX_OFFSET_BYTES LENGTH_INPUT // Should be (600×800×3)×(3÷4)÷4=270000 because it needs to be a whole number
+#define RX_OFFSET_32 RX_OFFSET_BYTES/4 // This needs to be a whole number, otherwise input in ram is overwritten!
 
 //#define i_P_START 0
 //#define i_LENGTH 1
@@ -159,7 +160,7 @@ int main()
 	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
 
 	printf("Writing the destination address for the data from S2MM in DDR...\n");
-	dma.S2MMSetDestinationAddress(P_START + RX_OFFSET);
+	dma.S2MMSetDestinationAddress(P_START + RX_OFFSET_BYTES);
 	printf("Check S2MM status.\n");
 	s2mm_status = dma.S2MMGetStatus();
 	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
@@ -269,7 +270,7 @@ int main()
 		//}
 	//}
 	uint8_t *out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
-	pmem.gather(out_buff, RX_OFFSET/4, LENGTH_OUTPUT);
+	pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
 	for (int i = 0; i < LENGTH_OUTPUT; i++) {
 		if (out_buff[i] != 0x14) {
 			printf("\nFailure in out_buff: %i %x --addr: %x\n\r", i, out_buff[i], &out_buff[i]);
