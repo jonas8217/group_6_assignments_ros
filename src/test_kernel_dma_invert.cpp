@@ -259,7 +259,7 @@ int main()
 	pmem.gather(io_buff, TX_OFFSET, LENGTH*2);
 	
 	for (int i = 0; i < (LENGTH*2) / sizeof(uint32_t); i++) {
-		printf("\nio_buff: %i %x\n\r", i, io_buff[i]);
+		printf("\nio_buff: %i %x --addr: %x\n\r", i, io_buff[i], &io_buff[i]);
 	}
 	
 	//for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
@@ -272,7 +272,7 @@ int main()
 	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
 	for (int i = 0; i < LENGTH_OUTPUT; i++) {
 		if (out_buff[i] != 0x14) {
-			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
+			printf("\nFailure in out_buff: %i %x --addr: %x\n\r", i, out_buff[i], &out_buff[i]);
 			break;
 		}
 	}
