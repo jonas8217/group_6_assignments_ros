@@ -102,7 +102,7 @@ class ImageSubscriber : public rclcpp::Node
 
             RCLCPP_INFO(this->get_logger(), "Loaded image from dram");
 
-			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), "8UC1", out_img).toImageMsg();
+			sensor_msgs::msg::Image::SharedPtr processed_image_msg = cv_bridge::CvImage(std_msgs::msg::Header(), "8UC", out_img).toImageMsg();
 			
             RCLCPP_INFO(this->get_logger(), "image loaded tp msg");
 
@@ -129,9 +129,6 @@ class ImageSubscriber : public rclcpp::Node
             int rows = out_img.rows;
             for (int y = 0; y < rows; y++){
                 for (int x = 0; x < cols; x++){
-                    //printf("x,y: %d,%d ",x,y);
-                    // printf("index: %d ",y*cols+x + (3-(i%4)*2));
-                    // printf("val: %d\n",out_buff[y*cols+x + (3-(i%4)*2)]);
                     out_img.at<uint8_t>(y,x) = out_buff[y*cols+x + (3-(i%4)*2)];
                     i++;
                 }
