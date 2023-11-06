@@ -130,7 +130,7 @@ class ImageSubscriber : public rclcpp::Node
                     printf("x,y: %d,%d ",x,y);
                     printf("index: %d ",y*cols+x + (3-(i%4)*2));
                     printf("val: %d\n",out_buff[y*cols+x + (3-(i%4)*2)]);
-                    out_img.at<uint8_t>(x,y) = out_buff[y*cols+x + (3-(i%4)*2)];
+                    out_img.at<uint8_t>(y,x) = out_buff[y*cols+x + (3-(i%4)*2)];
                     i++;
                 }
             }
