@@ -26,7 +26,7 @@
 // #define LENGTH 0x007fffff // Length in bytes
 #define P_START 0x70000000
 #define TX_OFFSET 0
-#define RX_OFFSET LENGTH_INPUT + 0x100
+#define RX_OFFSET LENGTH_INPUT
 
 //#define i_P_START 0
 //#define i_LENGTH 1
@@ -249,25 +249,33 @@ int main()
 	//     goto out;
 	// }
 
-	uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
-	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
+	//uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
+	//pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
 	//print_mem(out_buff, LENGTH_OUTPUT);
 	printf("\n\n");
 	
-	pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
-	for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
-		if (inp_buff[i] != inputVal) {
-			printf("\nFailure in inp_buff: %i %x\n\r", i, inp_buff[i]);
-			//break;
-		}
+	//pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
+	uint32_t *io_buff = (uint32_t *)malloc(LENGTH);
+	
+	pmem.gather(io_buff, RX_OFFSET, LENGTH);
+	
+	for (int i = 0; i < LENGTH / sizeof(uint32_t); i++) {
+		printf("\nio_buff: %i %x\n\r", i, io_buff[i]);
 	}
+	
+	//for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
+		//if (inp_buff[i] != inputVal) {
+	//		printf("\nFailure in inp_buff: %i %x\n\r", i, inp_buff[i]);
+			//break;
+		//}
+	//}
 
-	for (int i = 0; i < LENGTH_OUTPUT / sizeof(uint32_t); i++) {
-		if (out_buff[i] != outputVal) {
-			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
+	//for (int i = 0; i < LENGTH_OUTPUT / sizeof(uint32_t); i++) {
+		//if (out_buff[i] != outputVal) {
+	//		printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
 			//break;
-		}
-	}
+		//}
+	//}
 	
 
 	// printf("Data in buffer after read\n");
