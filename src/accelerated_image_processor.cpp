@@ -72,10 +72,7 @@ class ImageSubscriber : public rclcpp::Node
 
         int init_IPs_and_setup(){
             
-            if (Status != XST_SUCCESS) {
-                printf("Invert initialization failed %d\r\n", Status);
-                return XST_FAILURE;
-            }
+
             printf("\r\n--- IPs Intialized --- \r\n");
 
             inp_buff = (uint8_t *)malloc(LENGTH_INPUT);
@@ -198,7 +195,7 @@ int main(int argc, char *argv[])
         printf("Invert initialization failed %d\r\n", Status);
         return XST_FAILURE;
     }
-
+    
 	setvbuf(stdout,NULL,_IONBF,BUFSIZ);
 
 	rclcpp::init(argc,argv);
