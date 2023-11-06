@@ -293,7 +293,7 @@ int main()
 		}
 		
 		for (int i = 0; i < LENGTH_OUTPUT; i++) {
-			double expected_val = (255 - test_buff[i*3]*R_Weight + test_buff[(i*3) + 1]*G_Weight + test_buff[(i*3) + 2]*B_Weight);
+			double expected_val = (255 - (test_buff[i*3]*R_Weight + test_buff[(i*3) + 1]*G_Weight + test_buff[(i*3) + 2]*B_Weight));
 			if (gray_scale[i] != (uint8_t)expected_val) {
 				printf("%d %d %d",test_buff[i*3],test_buff[i*3+1],test_buff[i*3+2]);
 				printf("\nFailure in gray_scale: %i %d != %f --addr: %x\n\r", i, gray_scale[i], expected_val, &gray_scale[i]);
