@@ -231,11 +231,11 @@ int main()
 	
 	printf("\n\n");
 	
-	uint32_t *io_buff = (uint32_t *)malloc(LENGTH*2);
+	uint32_t *io_buff = (uint32_t *)malloc(LENGTH);
 	
-	pmem.gather(io_buff, TX_OFFSET, LENGTH*2);
+	pmem.gather(io_buff, TX_OFFSET, LENGTH);
 	
-	for (int i = 0; i < (LENGTH*2) / sizeof(uint32_t); i++) {
+	for (int i = 0; i < (LENGTH) / sizeof(uint32_t); i++) {
 		printf("\nio_buff: %i %x --addr: %x\n\r", i, io_buff[i], &io_buff[i]);
 	}
 	
