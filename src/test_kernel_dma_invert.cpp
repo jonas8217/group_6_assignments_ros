@@ -38,8 +38,8 @@
 
 #define XST_FAILURE		1L	//This is nice to have :)
 
-#define inputVal		0xebebebeb
-#define outputVal		0x14141414
+#define inputVal		0xeb
+#define outputVal		0x14
 
 // clock_t t;
 std::chrono::_V2::system_clock::time_point t1;
@@ -97,14 +97,14 @@ int main()
 	printf("\r\n--- Invert Intialized --- \r\n");
 
 
-	uint32_t *inp_buff = (uint32_t *)malloc(LENGTH_INPUT);
+	uint8_t *inp_buff = (uint8_t *)malloc(LENGTH_INPUT);
 	if (inp_buff == NULL)
 	{
 		printf("could not allocate user buffer\n");
 		return -1;
 	}
 	
-	for (int i = 0; i < (LENGTH_INPUT) / sizeof(uint32_t); i++)
+	for (int i = 0; i < (LENGTH_INPUT); i++)
 		inp_buff[i] = inputVal;
 
 	printf("User memory reserved and filled\n");
@@ -263,18 +263,27 @@ int main()
 		printf("\nio_buff: %i %x --addr: %x\n\r", i, io_buff[i], &io_buff[i]);
 	}
 	
-	//for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
-		//if (inp_buff[i] != inputVal) {
-	//		printf("\nFailure in inp_buff: %i %x\n\r", i, inp_buff[i]);
-			//break;
-		//}
-	//}
+	uint8_t *in_buff = (uint8_t *)malloc(LENGTH_INPUT);
+	pmem.gather(in_buff, TX_OFFSET, LENGTH_INPUT);
+	for (int i = 0; i < LENGTH_INPUT; i++) {
+		if (in_buff[i] != inputVal) {
+			printf("\nFailure in out_buff: %i %x --addr: %x\n\r", i, in_buff[i], &in_buff[i]);
+			break;
+		}
+		if (i == LENGTH_INPUT-1) {
+			printf("\n Output has correct value!\n");
+		}
+	}
+
 	uint8_t *out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
 	pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
 	for (int i = 0; i < LENGTH_OUTPUT; i++) {
-		if (out_buff[i] != 0x14) {
+		if (out_buff[i] != outputVal) {
 			printf("\nFailure in out_buff: %i %x --addr: %x\n\r", i, out_buff[i], &out_buff[i]);
 			break;
+		}
+		if (i == LENGTH_OUTPUT-1) {
+			printf("\n Output has correct value!\n");
 		}
 	}
 	
