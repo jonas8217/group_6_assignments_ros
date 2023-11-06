@@ -96,16 +96,6 @@ class ImageSubscriber : public rclcpp::Node
                 return -1;
             }
 
-            dma.MM2SReset();
-            dma.S2MMReset();
-
-            dma.MM2SInterruptEnable();
-    		dma.S2MMInterruptEnable();
-
-            dma.MM2SSetSourceAddress(P_START + TX_OFFSET);
-            dma.S2MMSetDestinationAddress(P_START + RX_OFFSET_BYTES);
-
-
         }
 
 
@@ -159,17 +149,30 @@ class ImageSubscriber : public rclcpp::Node
         }
 
         void run_Invert_IP(){
-
-            printf("test1");
+            
             pmem.transfer(inp_buff, TX_OFFSET, LENGTH_INPUT);
+            printf("test1");
+
+            dma.MM2SReset();
+            dma.S2MMReset();
+
             printf("test2");
             dma.MM2SHalt();
             dma.S2MMHalt();
+
+            dma.MM2SInterruptEnable();
+    		dma.S2MMInterruptEnable();
+
             printf("test3");
-            while(!XInvert_IsReady(&invertIP)) {}
+            dma.MM2SSetSourceAddress(P_START + TX_OFFSET);
+            dma.S2MMSetDestinationAddress(P_START + RX_OFFSET_BYTES);
+
             printf("test4");
-            XInvert_Start(&invertIP);
+            while(!XInvert_IsReady(&invertIP)) {}
+
             printf("test5");
+
+            XInvert_Start(&invertIP);
             dma.MM2SStart();
             dma.S2MMStart();
 
