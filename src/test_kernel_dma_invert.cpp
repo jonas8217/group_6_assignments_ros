@@ -237,6 +237,8 @@ int main()
 	uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
 	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
 	print_mem(out_buff, LENGTH_OUTPUT);
+	printf("\n\n");
+	print_mem(inp_buff, LENGTH_INPUT);
 	
 
 	// printf("Data in buffer after read\n");
