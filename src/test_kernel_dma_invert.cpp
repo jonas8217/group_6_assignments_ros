@@ -190,6 +190,9 @@ int main()
 
 	start_timer();
 	printf("...Waiting for MM2S synchronization...\n");
+
+	XInvert_Start(&invertIP);
+
 	// bool first = true;
 	while (!dma.MM2SIsSynced())
 	{
