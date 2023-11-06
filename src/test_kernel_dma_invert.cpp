@@ -26,7 +26,7 @@
 // #define LENGTH 0x007fffff // Length in bytes
 #define P_START 0x70000000
 #define TX_OFFSET 0
-#define RX_OFFSET LENGTH_INPUT
+#define RX_OFFSET LENGTH_INPUT + 0x100
 
 //#define i_P_START 0
 //#define i_LENGTH 1
