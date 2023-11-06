@@ -241,7 +241,7 @@ int main()
 	pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
 	for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
 		if (inp_buff[i] != 0) {
-			printf("\nFailure in inpbuff: %i %u\n\r", i, inp_buff[i]);
+			printf("\nFailure in inpbuff: %i %x\n\r", i, inp_buff[i]);
 			break;
 		}
 	}
