@@ -240,8 +240,8 @@ int main()
 	printf("\n\n");
 	pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
 	for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
-		if (inp_buff[i] != 0) {
-			printf("\nFailure in inpbuff: %i %x\n\r", i, inp_buff[i]);
+		if (out_buff[i] != 0xffffffff) {
+			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
 			break;
 		}
 	}
