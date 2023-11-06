@@ -246,14 +246,14 @@ int main()
 	for (int i = 0; i < LENGTH_INPUT / sizeof(uint32_t); i++) {
 		if (inp_buff[i] != inputVal) {
 			printf("\nFailure in inp_buff: %i %x\n\r", i, inp_buff[i]);
-			break;
+			//break;
 		}
 	}
 
 	for (int i = 0; i < LENGTH_OUTPUT / sizeof(uint32_t); i++) {
 		if (out_buff[i] != outputVal) {
 			printf("\nFailure in out_buff: %i %x\n\r", i, out_buff[i]);
-			break;
+			//break;
 		}
 	}
 	
