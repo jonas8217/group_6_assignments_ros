@@ -332,10 +332,10 @@ int main()
 		// Write to file
 		std::ofstream Result_File;
 		Result_File.open("Result_File.txt");
-		char * temp = "";
+		//char * temp = "";
 		for(int i = 0; i < LENGTH_OUTPUT; i++){
-			sprintf(temp,"%d",finalResultBuff[i]);
-			Result_File << temp << "\n";
+			//sprintf(temp,"%d",finalResultBuff[i]);
+			Result_File << finalResultBuff[i] << "\n";
 		}
 		Result_File.close();
 		printf("\nSaved result to file!\n", TRIES_N);
