@@ -30,7 +30,7 @@
 #define RX_OFFSET_32 RX_OFFSET_BYTES/4 // This needs to be a whole number, otherwise input in ram is overwritten!
 
 Reserved_Mem pmem;
-AXIDMAController dma;
+AXIDMAController dma(UIO_DMA_N, 0x10000);
 XInvert invertIP;
 
 class ImageSubscriber : public rclcpp::Node
@@ -198,9 +198,7 @@ class ImageSubscriber : public rclcpp::Node
 int main(int argc, char *argv[])
 {
 
-    Reserved_Mem pmem;
-    AXIDMAController dma(UIO_DMA_N, 0x10000);
-    XInvert invertIP;
+
 
 
     int Status;
