@@ -90,8 +90,10 @@ void loadImage(uint8_t *inp_buff) {
 	volatile int Image_Count = 0;
 
 	// Get test data
+	uint32_t temp32Val;
 	while(std::getline(Test_File, Test_Data)){
-		Image[Image_Count] = (uint32_t)std::stoul(Test_Data);
+		temp32Val = (uint32_t)std::stoul(Test_Data);
+		Image[Image_Count] = ((temp32Val & 0xff) << (3*8)) || ((temp32Val & (0xff << 8)) << 8) || ((temp32Val & (0xff << 16)) >> 8) || ((temp32Val & (0xff << 24)) >> 24); // Reverse bytes in 32 bit value
 		Image_Count++;
 	}
 	Test_File.close();
