@@ -156,7 +156,7 @@ int main()
 	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
 
 	printf("Writing the destination address for the data from S2MM in DDR...\n");
-	dma.S2MMSetDestinationAddress(P_START + RX_OFFSET);
+	dma.S2MMSetDestinationAddress(P_START + RX_OFFSET/4);
 	printf("Check S2MM status.\n");
 	s2mm_status = dma.S2MMGetStatus();
 	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
