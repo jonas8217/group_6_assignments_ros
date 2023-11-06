@@ -79,7 +79,7 @@ void print_mem(void *virtual_address, int byte_count)
 	printf("\n");
 }
 
-void loadImage(uint8_t *inp_buff) {
+void loadImage(uint32_t *inp_buff, uint8_t *test_buf) {
 	uint32_t *Image = (uint32_t *)inp_buff;
 	
 	// Read test file
@@ -92,6 +92,10 @@ void loadImage(uint8_t *inp_buff) {
 	// Get test data
 	while(std::getline(Test_File, Test_Data)){
 		Image[Image_Count] = (uint32_t)std::stoul(Test_Data);
+		test_buf[Image_Count*4] = (Image[Image_Count] & 0x000000ff);
+		test_buf[Image_Count*4+1] = ((Image[Image_Count] & 0x0000ff00) >> 8);
+		test_buf[Image_Count*4+2] = ((Image[Image_Count] & 0x00ff0000) >> 16);
+		test_buf[Image_Count*4+3] = ((Image[Image_Count] & 0xff000000) >> 24);
 		Image_Count++;
 	}
 	Test_File.close();
@@ -122,14 +126,17 @@ int main()
 
 	for (int try_n = 0; try_n < TRIES_N; try_n++)
 	{
-		uint8_t *inp_buff = (uint8_t *)malloc(LENGTH_INPUT);
+		uint32_t *inp_buff = (uint32_t *)malloc(LENGTH_INPUT);
 		if (inp_buff == NULL)
 		{
 			printf("could not allocate user buffer\n");
 			return -1;
 		}
 
-		loadImage(inp_buff);
+		uint8_t *test_buff = (uint8_t *)malloc(LENGTH_INPUT);
+		pmem.gather(test_buff, TX_OFFSET, LENGTH_INPUT);
+
+		loadImage(inp_buff, test_buff);
 
 		printf("User memory reserved and filled\n");
 		
@@ -260,23 +267,17 @@ int main()
 		
 		printf("\n\n");
 		
-		uint8_t *in_buff = (uint8_t *)malloc(LENGTH_INPUT);
-		pmem.gather(in_buff, TX_OFFSET, LENGTH_INPUT);
+		uint32_t *consist_buff = (uint32_t *)malloc(LENGTH_INPUT);
+		pmem.gather(consist_buff, TX_OFFSET, LENGTH_INPUT);
 		for (int i = 0; i < LENGTH_INPUT; i++) {
-			if (in_buff[i] != inp_buff[i]) {
-				printf("\nFailure in out_buff: %i (curr: %d) = (old: %d) --addr: %x\n\r", i, in_buff[i], inp_buff[i], &in_buff[i]);
+			if (consist_buff[i] != inp_buff[i]) {
+				printf("\nFailure in out_buff: %i (curr: %d) = (old: %d) --addr: %x\n\r", i, consist_buff[i], inp_buff[i], &consist_buff[i]);
 				FAIL = true;
 				break;
 			}
 			if (i == LENGTH_INPUT-1) {
 				printf("\n Input has correct value!\n");
 			}
-		}
-
-		for (int i = 0; i < LENGTH_INPUT/4; i++)
-		{
-			uint32_t temp32Val = ((uint32_t *)inp_buff)[i];
-			((uint32_t *)in_buff)[i] = ((temp32Val & 0xff) << 24) || ((temp32Val & (0xff << 8)) << 8) || ((temp32Val & (0xff << 16)) >> 8) || ((temp32Val & (0xff << 24)) >> 24);
 		}
 
 		uint8_t *out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
@@ -289,7 +290,7 @@ int main()
 		//}
 		
 		for (int i = 0; i < LENGTH_OUTPUT; i++) {
-			uint8_t expected_val = 255 - (uint8_t)(in_buff[i*3]*R_Weight + in_buff[(i*3) + 1]*G_Weight + in_buff[(i*3) + 2]*B_Weight);
+			uint8_t expected_val = 255 - (uint8_t)(test_buff[i*3]*R_Weight + test_buff[(i*3) + 1]*G_Weight + test_buff[(i*3) + 2]*B_Weight);
 			if (out_buff[i] != expected_val) {
 				printf("\nFailure in out_buff: %i %d != %d --addr: %x\n\r", i, out_buff[i], expected_val, &out_buff[i]);
 				FAIL = true;
