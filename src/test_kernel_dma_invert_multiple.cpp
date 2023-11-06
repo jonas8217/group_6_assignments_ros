@@ -275,7 +275,7 @@ int main()
 
 	if (FAIL == false)
 	{
-		printf("\n Success, all tries worked!\n");
+		printf("\nSuccess, all tries (%i) worked!\n", TRIES_N);
 	}
 	
 
