@@ -165,6 +165,11 @@ int main()
 	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
 	printf("\n");
 
+	while(!XInvert_IsReady(&invertIP)) {
+		// wait
+	}
+	printf("\nIp ready\n");
+
 	// Start IP
 	XInvert_Start(&invertIP);
 
@@ -231,7 +236,7 @@ int main()
 	while(!XInvert_IsDone(&invertIP)) {
 		// Wait
 	}
-	printf("Ip done!");
+	printf("\nIp done!\n");
 
 	// write_info_LKM[i_P_START] = 0; //! CHECK update read
 	// write_info_LKM[i_LENGTH] = 100;
