@@ -19,7 +19,7 @@
 #include "lib/Invert_v1_0/src/xinvert_linux.c"
 
 #define DEVICE_FILENAME "/dev/reservedmemLKM"
-#define LENGTH 240 //(800*600*4) // Number of bytes (rgb + grayscale)
+#define LENGTH 800*600*4 //(800*600*4) // Number of bytes (rgb + grayscale)
 #define LENGTH_INPUT 	LENGTH*3/4 // Number of bytes for input (3/4 because rgb)
 #define LENGTH_OUTPUT	LENGTH/4 // Number of bytes for output (1/4 because grayscale)
 // #define LENGTH 0x007fffff // Length in bytes
