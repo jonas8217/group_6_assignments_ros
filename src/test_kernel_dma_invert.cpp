@@ -269,7 +269,7 @@ int main()
 		//}
 	//}
 	uint8_t *out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
-	pmem.gather(out_buff, RX_OFFSET, LENGTH_OUTPUT);
+	pmem.gather(out_buff, RX_OFFSET/4, LENGTH_OUTPUT);
 	for (int i = 0; i < LENGTH_OUTPUT; i++) {
 		if (out_buff[i] != 0x14) {
 			printf("\nFailure in out_buff: %i %x --addr: %x\n\r", i, out_buff[i], &out_buff[i]);
