@@ -117,7 +117,7 @@ class ImageSubscriber : public rclcpp::Node
             for (int y = 0; y < inp_img_rgb.rows; y++){
                 for (int x = 0; x < inp_img_rgb.cols; x++){
                     for (int c = 0; c < 3; c++){
-                        inp_buff[y*inp_img_rgb.cols*3+x*3+c + (3-(i%4)*2)] = inp_img_rgb.at<cv::Vec3b>(y,x)[c];
+                        inp_buff[y*inp_img_rgb.cols*3+x*3+c] = inp_img_rgb.at<cv::Vec3b>(y,x)[c]; // + (3-(i%4)*2)
                         i++;
                     }
                 }
