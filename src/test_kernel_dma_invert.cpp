@@ -20,13 +20,13 @@
 #include "lib/Invert_v1_0/src/xinvert_linux.c"
 
 #define DEVICE_FILENAME "/dev/reservedmemLKM"
-#define LENGTH 240 //(800*600*4)
-#define LENGTH_INPUT 	(LENGTH*3/4)
-#define LENGTH_OUTPUT	(LENGTH/4)
+#define LENGTH 240 //(800*600*4) // Number of bytes (rgb + grayscale)
+#define LENGTH_INPUT 	ceil(LENGTH*3/4) // Number of bytes for input (3/4 because rgb)
+#define LENGTH_OUTPUT	ceil(LENGTH/4) // Number of bytes for output (1/4 because grayscale)
 // #define LENGTH 0x007fffff // Length in bytes
 #define P_START 0x70000000
 #define TX_OFFSET 0
-#define RX_OFFSET LENGTH_INPUT // Should be (600×800×3)×(3÷4)÷4=270000 because it needs to be a whole number
+#define RX_OFFSET ceil(LENGTH_INPUT) // Should be (600×800×3)×(3÷4)÷4=270000 because it needs to be a whole number
 
 //#define i_P_START 0
 //#define i_LENGTH 1
