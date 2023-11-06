@@ -112,12 +112,14 @@ class ImageSubscriber : public rclcpp::Node
         
         void loadImage() {
             int i = 0;
-            cv::cvtColor(inp_img,inp_img_rgb,cv::COLOR_YUV2RGB_UYVY);
+            cv::cvtColor(inp_img,inp_img_rgb,cv::COLOR_YUV2RGB);
             //printf("inp img size: %d,%d",inp_img_rgb.cols,inp_img_rgb.rows);
-            for (int y = 0; y < inp_img_rgb.rows; y++){
-                for (int x = 0; x < inp_img_rgb.cols; x++){
+            int cols = inp_img_rgb.cols;
+            int rows = inp_img_rgb.rows;
+            for (int y = 0; y < rows; y++){
+                for (int x = 0; x < cols; x++){
                     for (int c = 0; c < 3; c++){
-                        inp_buff[y*inp_img_rgb.cols*3+x*3+c] = inp_img_rgb.at<cv::Vec3b>(y,x)[c]; // + (3-(i%4)*2)
+                        inp_buff[y*cols*3+x*3+c + (3-(i%4)*2)] = inp_img_rgb.at<cv::Vec3b>(y,x)[c];
                         i++;
                     }
                 }
@@ -130,7 +132,7 @@ class ImageSubscriber : public rclcpp::Node
             int rows = out_img.rows;
             for (int y = 0; y < rows; y++){
                 for (int x = 0; x < cols; x++){
-                    out_img.at<uint8_t>(y,x) = out_buff[y*cols+x]; // + (3-(i%4)*2)
+                    out_img.at<uint8_t>(y,x) = out_buff[y*cols+x+ (3-(i%4)*2)]; 
                     i++;
                 }
             }
