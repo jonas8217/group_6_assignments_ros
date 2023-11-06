@@ -280,19 +280,22 @@ int main()
 			}
 		}
 
-		uint8_t *out_buff = (uint8_t *)malloc(LENGTH_OUTPUT);
+		uint32_t *out_buff = (uint32_t *)malloc(LENGTH_OUTPUT);
 		pmem.gather(out_buff, RX_OFFSET_32, LENGTH_OUTPUT);
 		
-		//for (int i = 0; i < LENGTH_OUTPUT/4; i++)
-		//{
-		//	uint32_t temp32Val = ((uint32_t *)out_buff)[i];
-		//	((uint32_t *)out_buff)[i] = ((temp32Val & 0xff) << 24) || ((temp32Val & (0xff << 8)) << 8) || ((temp32Val & (0xff << 16)) >> 8) || ((temp32Val & (0xff << 24)) >> 24);
-		//}
+		uint8_t gray_scale[LENGTH_OUTPUT];
+		for (int i = 0; i < LENGTH_OUTPUT/4; i++)
+		{
+			gray_scale[i*4] = (out_buff[i] & 0x000000ff);
+			gray_scale[i*4+1] = ((out_buff[i] & 0x0000ff00) >> 8);
+			gray_scale[i*4+2] = ((out_buff[i] & 0x00ff0000) >> 16);
+			gray_scale[i*4+3] = ((out_buff[i] & 0xff000000) >> 24);
+		}
 		
 		for (int i = 0; i < LENGTH_OUTPUT; i++) {
 			uint8_t expected_val = 255 - (uint8_t)(test_buff[i*3]*R_Weight + test_buff[(i*3) + 1]*G_Weight + test_buff[(i*3) + 2]*B_Weight);
-			if (out_buff[i] != expected_val) {
-				printf("\nFailure in out_buff: %i %d != %d --addr: %x\n\r", i, out_buff[i], expected_val, &out_buff[i]);
+			if (gray_scale[i] != expected_val) {
+				printf("\nFailure in gray_scale: %i %d != %d --addr: %x\n\r", i, gray_scale[i], expected_val, &gray_scale[i]);
 				FAIL = true;
 				break;
 			}
