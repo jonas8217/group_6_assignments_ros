@@ -20,10 +20,13 @@
 #include "lib/Invert_v1_0/src/xinvert_linux.c"
 
 #define DEVICE_FILENAME "/dev/reservedmemLKM"
-#define LENGTH 1800000
+#define LENGTH (800*600*4)
+#define LENGTH_INPUT 	(LENGTH*3/4)
+#define LENGTH_OUTPUT	LENGTH - LENGTH_INPUT
 // #define LENGTH 0x007fffff // Length in bytes
 #define P_START 0x70000000
-#define P_OFFSET 0
+#define TX_OFFSET 0
+#define RX_OFFSET LENGTH_INPUT/4
 
 //#define i_P_START 0
 //#define i_LENGTH 1
@@ -97,7 +100,7 @@ int main()
 		return -1;
 	}
 
-	for (int i = 0; i < LENGTH / sizeof(uint32_t); i++)
+	for (int i = 0; i < (LENGTH_INPUT) / sizeof(uint32_t); i++)
 		u_buff[i] = i * 2;
 
 	printf("User memory reserved and filled\n");
@@ -105,93 +108,94 @@ int main()
 	tmp = 0;
 	start_timer();
 	// ret = write(reserved_mem_fd, write_info_LKM, sizeof(write_info_LKM));
-	pmem.transfer(u_buff, P_OFFSET, LENGTH);
+	pmem.transfer(u_buff, TX_OFFSET, LENGTH_INPUT);
 	total_t += stop_timer();
-	std::cout << "Data transfered to reserved memory: " << total_t << "ms [" << (float)LENGTH / 1000000. << "MB]" << std::endl;
+	std::cout << "Data transfered to reserved memory: " << total_t << "ms [" << (float)LENGTH_INPUT / 1000000. << "MB]" << std::endl;
 
 	start_timer();
-	// printf("Reset the DMA.\n");
+	printf("Reset the DMA.\n");
 	dma.MM2SReset();
-	// dma.S2MMReset();
+	dma.S2MMReset();
 
-	// printf("Check MM2S status.\n");
+	printf("Check MM2S status.\n");
 	DMAStatus mm2s_status = dma.MM2SGetStatus();
-	// printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
-	// printf("Check S2MM status.\n");
-	// DMAStatus s2mm_status = dma.S2MMGetStatus();
-	// printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
-	// printf("\n");
+	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
+	printf("Check S2MM status.\n");
+	DMAStatus s2mm_status = dma.S2MMGetStatus();
+	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
+	printf("\n");
 
-	// printf("Halt the DMA.\n");
+	printf("Halt the DMA.\n");
 	dma.MM2SHalt();
-	// dma.S2MMHalt();
+	dma.S2MMHalt();
 
-	// printf("Check MM2S status.\n");
-	// mm2s_status = dma.MM2SGetStatus();
-	// printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
-	// printf("Check S2MM status.\n");
-	// s2mm_status = dma.S2MMGetStatus();
-	// printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
-	// printf("\n");
+	printf("Check MM2S status.\n");
+	mm2s_status = dma.MM2SGetStatus();
+	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
+	printf("Check S2MM status.\n");
+	s2mm_status = dma.S2MMGetStatus();
+	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
+	printf("\n");
 
-	// printf("Enable all interrupts.\n");
+	printf("Enable all interrupts.\n");
 	dma.MM2SInterruptEnable();
-	// dma.S2MMInterruptEnable();
+	dma.S2MMInterruptEnable();
 
-	// printf("Check MM2S status.\n");
-	// mm2s_status = dma.MM2SGetStatus();
-	// printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
-	// printf("Check S2MM status.\n");
-	// s2mm_status = dma.S2MMGetStatus();
-	// printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
-	// printf("\n");
+	printf("Check MM2S status.\n");
+	mm2s_status = dma.MM2SGetStatus();
+	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
+	printf("Check S2MM status.\n");
+	s2mm_status = dma.S2MMGetStatus();
+	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
+	printf("\n");
 
-	// printf("Writing source address of the data from MM2S in DDR...\n");
-	dma.MM2SSetSourceAddress(P_START + P_OFFSET);
-	// printf("Check MM2S status.\n");
-	// mm2s_status = dma.MM2SGetStatus();
-	// printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
+	printf("Writing source address of the data from MM2S in DDR...\n");
+	dma.MM2SSetSourceAddress(P_START + TX_OFFSET);
+	printf("Check MM2S status.\n");
+	mm2s_status = dma.MM2SGetStatus();
+	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
 
-	// printf("Writing the destination address for the data from S2MM in DDR...\n");
-	// dma.S2MMSetDestinationAddress(P_START + P_OFFSET);
-	// printf("Check S2MM status.\n");
-	// s2mm_status = dma.S2MMGetStatus();
-	// printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
-	// printf("\n");
+	printf("Writing the destination address for the data from S2MM in DDR...\n");
+	dma.S2MMSetDestinationAddress(P_START + RX_OFFSET);
+	printf("Check S2MM status.\n");
+	s2mm_status = dma.S2MMGetStatus();
+	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
+	printf("\n");
+
+	// Start IP
+	XInvert_Start(&invertIP);
 
 	dma.MM2SStart();
-	// printf("Run the MM2S channel.\n");
-	// printf("Check MM2S status.\n");
-	// mm2s_status = dma.MM2SGetStatus();
-	// printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
+	printf("Run the MM2S channel.\n");
+	printf("Check MM2S status.\n");
+	mm2s_status = dma.MM2SGetStatus();
+	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
 
-	// printf("Run the S2MM channel.\n");
-	// dma.S2MMStart();
-	// printf("Check S2MM status.\n");
-	// s2mm_status = dma.S2MMGetStatus();
-	// printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
-	// printf("\n");
+	printf("Run the S2MM channel.\n");
+	dma.S2MMStart();
+	printf("Check S2MM status.\n");
+	s2mm_status = dma.S2MMGetStatus();
+	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
+	printf("\n");
 
-	// printf("\nWriting MM2S transfer length of %i bytes...\n", LENGTH);
-	dma.MM2SSetLength(LENGTH); //! WIll only work up to 2^23
-	// printf("Check MM2S status.\n");
-	// mm2s_status = dma.MM2SGetStatus();
-	// printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
-	// printf("Writing S2MM transfer length of 32 bytes...\n");
-	// dma.S2MMSetLength(32*32*8);
-	// printf("Check S2MM status.\n");
-	// s2mm_status = dma.S2MMGetStatus();
-	// printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
-	// printf("\n");
+	printf("\nWriting MM2S transfer length of %i bytes...\n", LENGTH_INPUT);
+	dma.MM2SSetLength(LENGTH_INPUT); //! WIll only work up to 2^23
+	printf("Check MM2S status.\n");
+	mm2s_status = dma.MM2SGetStatus();
+	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
+	printf("Writing S2MM transfer length of 32 bytes...\n");
+	dma.S2MMSetLength(LENGTH_OUTPUT);
+	printf("Check S2MM status.\n");
+	s2mm_status = dma.S2MMGetStatus();
+	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
+	printf("\n");
 	
 	tmp = stop_timer();
 	total_t+=tmp;
-	std::cout << "\nDMA setup done, transfer begun: " << tmp << "ms [" << (float)LENGTH / 1000000. << "MB]\n" << std::endl;
+	std::cout << "\nDMA setup done, transfer begun: " << tmp << "ms [" << (float)LENGTH_INPUT / 1000000. << "MB]\n" << std::endl;
 
 	start_timer();
 	printf("...Waiting for MM2S synchronization...\n");
-
-	XInvert_Start(&invertIP);
 
 	// bool first = true;
 	while (!dma.MM2SIsSynced())
@@ -205,19 +209,19 @@ int main()
 
 	tmp = stop_timer();
 	total_t += tmp;
-	std::cout << "\nData transfered to transfered by DMA: " << tmp << "ms [" << (float)LENGTH / 1000000. << "MB]\n" << std::endl;
+	std::cout << "\nData transfered to transfered by DMA: " << tmp << "ms [" << (float)LENGTH_INPUT / 1000000. << "MB]\n" << std::endl;
 
-	// printf("Check MM2S status.\n");
-	// mm2s_status = dma.MM2SGetStatus();
-	// printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
-	// printf("Waiting for S2MM sychronization...\n");
-	// while(!dma.S2MMIsSynced()) {
-	// 	printf("Not synced yet...\n");
-	// }
+	printf("Check MM2S status.\n");
+	mm2s_status = dma.MM2SGetStatus();
+	printf("MM2S status: %s\n", mm2s_status.to_string().c_str());
+	printf("Waiting for S2MM sychronization...\n");
+	while(!dma.S2MMIsSynced()) {
+		//printf("Not synced yet...\n");
+	}
 
-	// printf("Check S2MM status.\n");
-	//  s2mm_status = dma.S2MMGetStatus();
-	// printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
+	printf("Check S2MM status.\n");
+	s2mm_status = dma.S2MMGetStatus();
+	printf("S2MM status: %s\n", s2mm_status.to_string().c_str());
 
 	// write_info_LKM[i_P_START] = 0; //! CHECK update read
 	// write_info_LKM[i_LENGTH] = 100;
@@ -237,6 +241,6 @@ int main()
 	// }
 	printf("ALL DONE!\n");
 
-	std::cout << "Total duration of transfer: " << total_t << "ms [" << (float)LENGTH / 1000000. << "MB]" << std::endl;
+	std::cout << "Total duration of transfer: " << total_t << "ms [" << (float)LENGTH_INPUT / 1000000. << "MB]" << std::endl;
 	return ret;
 }
