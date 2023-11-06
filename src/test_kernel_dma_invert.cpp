@@ -257,7 +257,7 @@ int main()
 	//pmem.gather(inp_buff, TX_OFFSET, LENGTH_INPUT);
 	uint32_t *io_buff = (uint32_t *)malloc(LENGTH*2);
 	
-	pmem.gather(io_buff, RX_OFFSET-LENGTH/2, LENGTH*2);
+	pmem.gather(io_buff, TX_OFFSET, LENGTH*2);
 	
 	for (int i = 0; i < (LENGTH*2) / sizeof(uint32_t); i++) {
 		printf("\nio_buff: %i %x\n\r", i, io_buff[i]);
