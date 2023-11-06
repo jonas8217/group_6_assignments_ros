@@ -79,15 +79,15 @@ if False:
     img.show()
 
 
-if False:
+if True:
     bin32_arr = to_dec_arr_32bit(img)
     with open("RGB_array.txt", 'w') as f:
         f.write('\n'.join(bin32_arr))
 
-if True:
+if False:
     size = img.size
     with open("L_sobel.txt", 'r') as f:
         pixel_array = f.read().split('\n')
     img = to_image_32bit(pixel_array,size,'L') # L == grayscale
     img.show()
-    #img.save("test_image_grayscale_inverted.jpg")
+    img.save("test_image_2_grayscale_inverted.jpg")
